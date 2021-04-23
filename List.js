@@ -19,7 +19,7 @@ export default function List({route, navigation}) {
             style={styles.scrollContainer}
             contentContainerStyle={styles.itemsContainer}>
                 {items.map(item => {
-                    return <Item key={item.id} id={item.id} item={item.quantidade + ' da ' + item.descricao } navigation={navigation} />
+                    return <Item key={item.id} id={item.id} item={item.quantidade + ' unidades da ' + item.descricao + ' / Data entrega ' + item.date + '/ Gelada: ' + (item.isGelada == true ? 'Sim' : 'Não') } navigation={navigation} />
                 })}
             </ScrollView>
         </View>

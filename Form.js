@@ -1,16 +1,21 @@
 import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
-import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert } from 'react-native';
+import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, CheckBox } from 'react-native';
+import DatePicker from 'react-native-modal-datetime-picker';
 import Database from './Database';
 
 export default function Form({route, navigation}) {
     const id = route.params ? route.params.id : undefined;
     const [descricao, setDescricao] = useState('');
     const [quantidade, setQuantidade] = useState('');
+    const [isSelected, setSelection] = useState(false);
+    const [date, setDate] = useState('');
+    const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
     useEffect(() => {
         if(!route.params) return;
         setDescricao(route.params.descricao);
+        setDate(route.params.date.toString() !== null ? route.params.date.toString() : '')
         setQuantidade(route.params.quantidade.toString() != null ? route.params.quantidade.toString() : '');
     }, [route])
 
@@ -22,8 +27,25 @@ export default function Form({route, navigation}) {
         setQuantidade(quantidade);
     }
 
+    const showDatePicker = () => {
+        setDatePickerVisibility(true);
+    };
+
+    const hideDatePicker = () => {
+        setDatePickerVisibility(false);
+    };
+    
+    const handleConfirm = (dateStr) => {
+        var date;
+        var formattedDate;
+
+        date = new Date(dateStr);
+        formattedDate = date.getFullYear() + "-" + ('0' + (date.getMonth() + 1)).slice(-2) + "-" + ('0' + date.getDate()).slice(-2)
+        setDate(formattedDate)
+        hideDatePicker();
+      };
     async function handleButtonPress() {
-        const item = {descricao, quantidade: parseInt(quantidade)};
+        const item = {descricao, quantidade: parseInt(quantidade), date: date, isGelada: isSelected};
         if(item.descricao == "") {
             Alert.alert(
                 "Atenção",
@@ -75,6 +97,18 @@ export default function Form({route, navigation}) {
                 keyboardType={'numeric'}
                 clearButtonMode="always"
                 value={quantidade.toString()} />
+                <TextInput style={styles.input} placeholder="Informe data de entrega" onTouchStart={showDatePicker} value={date.toString()} />
+                <DatePicker   
+                    isVisible={isDatePickerVisible}
+                    mode="date"
+                    onConfirm={handleConfirm}
+                    onCancel={hideDatePicker}        />
+                <CheckBox
+                        value={isSelected}
+                        onValueChange={setSelection}
+                        style={styles.checkbox}
+                        />
+                <Text style={styles.buttonText}>Gelada ou Natural? {isSelected ? "👍" : "👎"}</Text>
                 <TouchableOpacity style={styles.button} onPress={handleButtonPress}>
                     <Text style={styles.buttonText}>Salvar</Text>
                 </TouchableOpacity>
@@ -114,6 +148,13 @@ const styles = StyleSheet.create({
         paddingHorizontal: 24,
         fontSize: 16,
         alignItems: 'stretch'
+    },
+    datePicker: {
+        width: '100%',
+        marginTop: 15,
+        borderRadius: 10,
+        paddingHorizontal: 15,
+        fontSize: 16,
     },
     button: {
         marginTop: 15,

@@ -1,12 +1,10 @@
-import React, {useState} from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert, Image } from 'react-native';
-import Database from './Database';
+import React from 'react';
+import { StyleSheet, Text, View, Image } from 'react-native';
 import Estrela from './assets/estrela.png';
 import EstrelaVazia from './assets/estrela-vazia.png';
 
 
 export default function ItemFavorite(props) {
-    console.log(props);
     return (
         <View style={styles.container}>
             <View style={styles.favoriteContainer}>

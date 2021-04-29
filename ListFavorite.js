@@ -9,7 +9,7 @@ export default function ListFavorite({route, navigation}) {
     const [itemsFavorite, setItemsFavorite] = useState([]);
     useEffect(() => {
         Database.getItemsFavorite().then(items => setItemsFavorite(items));
-    }, [route]);
+    }, [itemsFavorite]);
     return (
         <View style={styles.container}>
             <StatusBar style="light"/>

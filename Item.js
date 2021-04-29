@@ -1,12 +1,27 @@
-import React from 'react';
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from 'react-native';
+import React, {useState} from 'react';
+import { StyleSheet, Text, View, TouchableOpacity, Alert, Image } from 'react-native';
 import Database from './Database';
+import Estrela from './assets/estrela.png';
+import EstrelaVazia from './assets/estrela-vazia.png';
+
 
 export default function Item(props) {
+    const [isFavorite, setFavorite] = useState(false);
 
     async function handleEditarPress() {
         const item = await Database.getItem(props.id)
         props.navigation.navigate("Form", item);
+    }
+
+    async function handleFavoritePress() {
+        if(!isFavorite) {
+            setFavorite(true);
+            const favorite = await Database.saveFavorite(true, props.id)
+
+        } else {
+            setFavorite(false);
+            const favorite = await Database.saveFavorite(false, props.id)
+        }
     }
 
     function handleDeletePress() {
@@ -30,6 +45,12 @@ export default function Item(props) {
     
     return (
         <View style={styles.container}>
+            <View style={styles.favoriteContainer}>
+                <TouchableOpacity onPressIn={handleFavoritePress}> 
+                    <Image source={isFavorite ? Estrela : EstrelaVazia} style={{ width: 20, height: 20}} />
+                </TouchableOpacity>
+            </View>
+
             <Text>{props.item}</Text>
             <View style={styles.buttonsContainer}>
                 <TouchableOpacity style={styles.deleteButton} onPress={handleDeletePress}>
@@ -46,7 +67,6 @@ export default function Item(props) {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#fff',
-        marginTop: 20,
         width: '100%'
     },
     buttonsContainer: {
@@ -81,6 +101,10 @@ const styles = StyleSheet.create({
         shadowOpacity: 10,
         shadowColor: '#ccc',
         alignItems: 'center'
+    },
+    favoriteContainer: {
+        flexDirection: 'row-reverse',
+        alignItems: 'flex-end',
     },
     buttonText: {
         color: '#fff',

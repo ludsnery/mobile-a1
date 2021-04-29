@@ -7,10 +7,20 @@ async function saveItem(item, id) {
     if(id) {
         const index = await savedItems.findIndex(item => item.id === id)
         savedItems[index] = item
-        console.log(savedItems[index])
     } else {
         savedItems.push(item)
     }
+    return await AsyncStorage.setItem('items', JSON.stringify(savedItems))
+}
+
+async function saveFavorite(favorite, id) {
+    const savedItems = await getItems();
+    if(id) {
+        const index = await savedItems.findIndex(item => item.id === id)
+        let item = {...savedItems[index], favorite: favorite}
+        savedItems[index] = item
+    }
+
     return await AsyncStorage.setItem('items', JSON.stringify(savedItems))
 }
 
@@ -39,5 +49,6 @@ module.exports = {
     saveItem,
     getItems,
     getItem,
-    deleteItem
+    deleteItem,
+    saveFavorite
 }

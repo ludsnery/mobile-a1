@@ -5,6 +5,7 @@ import { NavigationContainer } from '@react-navigation/native';
 
 import List from './List';
 import Form from './Form';
+import ListFavorite from './ListFavorite';
 
 const { Navigator, Screen } = createBottomTabNavigator();
 
@@ -24,8 +25,8 @@ function Tab() {
                     justifyContent: 'center',
                 },
                 labelStyle: {
-                    fontSize: 13,
-                    marginLeft: 16,
+                    fontSize: 12,
+                    marginLeft: 5,
                 },
                 inactiveBackgroundColor: '#fafafc',
                 activeBackgroundColor: '#ebebf5',
@@ -37,6 +38,9 @@ function Tab() {
                 }}/>
                 <Screen name="List" component={List} options={{
                     tabBarLabel: "Cervejas"
+                }}/>
+                <Screen name="ListFavorite" component={ListFavorite} options={{
+                    tabBarLabel: "Listar favoritos"
                 }}/>
             </Navigator>
         </NavigationContainer>

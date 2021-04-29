@@ -45,7 +45,7 @@ export default function Form({route, navigation}) {
         hideDatePicker();
       };
     async function handleButtonPress() {
-        const item = {descricao, quantidade: parseInt(quantidade), date: date, isGelada: isSelected};
+        const item = {descricao, quantidade: parseInt(quantidade), date: date, isGelada: isSelected, favorite: false};
         if(item.descricao == "") {
             Alert.alert(
                 "Atenção",

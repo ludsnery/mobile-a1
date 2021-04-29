@@ -6,10 +6,9 @@ import Database from './Database';
 import ItemFavorite from './ItemFavorite';
 
 export default function ListFavorite({route, navigation}) {
-    const [items, setItems] = useState([]);
-
+    const [itemsFavorite, setItemsFavorite] = useState([]);
     useEffect(() => {
-        Database.getItems().then(items => setItems(items));
+        Database.getItemsFavorite().then(items => setItemsFavorite(items));
     }, [route]);
     return (
         <View style={styles.container}>
@@ -18,10 +17,8 @@ export default function ListFavorite({route, navigation}) {
             <ScrollView 
             style={styles.scrollContainer}
             contentContainerStyle={styles.itemsContainer}>
-                {items.map(item => {
-                    if(item.favorite == true) {
-                        return <ItemFavorite key={item.id} id={item.id} item={item.quantidade + ' unidades da ' + item.descricao + ' / Data entrega ' + item.date + '/ Gelada: ' + (item.isGelada == true ? 'Sim' : 'Não') } favorite={item.favorite} navigation={navigation} />
-                    }
+                {itemsFavorite.map(item => {
+                    return <ItemFavorite key={item.id} id={item.id} item={item.quantidade + ' unidades da ' + item.descricao + ' / Data entrega ' + item.date + '/ Gelada: ' + (item.isGelada == true ? 'Sim' : 'Não') } favorite={item.favorite} navigation={navigation} />
                 })}
             </ScrollView>
         </View>

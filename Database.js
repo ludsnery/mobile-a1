@@ -20,7 +20,6 @@ async function saveFavorite(favorite, id) {
         let item = {...savedItems[index], favorite: favorite}
         savedItems[index] = item
     }
-
     return await AsyncStorage.setItem('items', JSON.stringify(savedItems))
 }
 
@@ -29,6 +28,19 @@ function getItems() {
             .then(response => {
                 if(response) 
                     return Promise.resolve(JSON.parse(response));
+                else 
+                    return Promise.resolve([])
+            })
+}
+
+function getItemsFavorite() {
+    return AsyncStorage.getItem('items')
+            .then(response => {
+                if(response) {
+                    let result = JSON.parse(response);
+                    let arrayItem = result.filter((item) => item.favorite == true);
+                    return Promise.resolve(arrayItem);
+                }
                 else 
                     return Promise.resolve([])
             })
@@ -50,5 +62,6 @@ module.exports = {
     getItems,
     getItem,
     deleteItem,
-    saveFavorite
+    saveFavorite,
+    getItemsFavorite
 }

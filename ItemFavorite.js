@@ -6,27 +6,12 @@ import EstrelaVazia from './assets/estrela-vazia.png';
 
 
 export default function ItemFavorite(props) {
-    const [isFavorite, setFavorite] = useState(props.favorite);
-
-    async function handleFavoritePress() {
-        if(!isFavorite) {
-            setFavorite(true);
-            const favorite = await Database.saveFavorite(true, props.id)
-
-        } else {
-            setFavorite(false);
-            const favorite = await Database.saveFavorite(false, props.id)
-        }
-    }
-    
+    console.log(props);
     return (
         <View style={styles.container}>
             <View style={styles.favoriteContainer}>
-                <TouchableOpacity onPressIn={handleFavoritePress}> 
-                    <Image source={isFavorite ? Estrela : EstrelaVazia} style={{ width: 20, height: 20}} />
-                </TouchableOpacity>
+                <Image source={props.favorite ? Estrela : EstrelaVazia} style={{ width: 20, height: 20}} />
             </View>
-
             <Text>{props.item}</Text>
         </View>
     )

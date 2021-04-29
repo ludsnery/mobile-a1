@@ -17,7 +17,6 @@ export default function Item(props) {
         if(!isFavorite) {
             setFavorite(true);
             const favorite = await Database.saveFavorite(true, props.id)
-
         } else {
             setFavorite(false);
             const favorite = await Database.saveFavorite(false, props.id)

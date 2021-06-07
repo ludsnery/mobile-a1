@@ -2,14 +2,21 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Database from './Database';
 import Item from './Item';
-
+import api from './services/api'
 export default function List({route, navigation}) {
     const [items, setItems] = useState([]);
 
     useEffect(() => {
-        Database.getItems().then(items => setItems(items));
+        async function loadBebidas() {
+            try {
+                const response = await api.get('/api/bebidas');
+                setItems(response.data)
+            } catch(e) {
+                console.log(e);
+            }
+        }
+        loadBebidas();
     }, [route]);
     return (
         <View style={styles.container}>
@@ -19,7 +26,7 @@ export default function List({route, navigation}) {
             style={styles.scrollContainer}
             contentContainerStyle={styles.itemsContainer}>
                 {items.map(item => {
-                    return <Item key={item.id} id={item.id} item={item.quantidade + ' unidades da ' + item.descricao + ' / Data entrega ' + item.date + '/ Gelada: ' + (item.isGelada == true ? 'Sim' : 'Não') } navigation={navigation} />
+                    return <Item key={item._id} id={item._id} item={item.quantidade + ' unidades da ' + item.descricao + ' / Data entrega ' + new Date(item.dataEntrega).toLocaleDateString('pt-BR') + '/ Gelada: ' + (item.isGelada == true ? 'Sim' : 'Não') } navigation={navigation} />
                 })}
             </ScrollView>
         </View>

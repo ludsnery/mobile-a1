@@ -2,13 +2,12 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Database from './Database';
 import ItemFavorite from './ItemFavorite';
 
 export default function ListFavorite({route, navigation}) {
     const [itemsFavorite, setItemsFavorite] = useState([]);
     useEffect(() => {
-        Database.getItemsFavorite().then(items => setItemsFavorite(items));
+        // Database.getItemsFavorite().then(items => setItemsFavorite(items));
     }, [itemsFavorite]);
     return (
         <View style={styles.container}>

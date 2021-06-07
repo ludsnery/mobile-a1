@@ -1,25 +1,27 @@
 import React, {useState} from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, Alert, Image } from 'react-native';
-import Database from './Database';
 import Estrela from './assets/estrela.png';
 import EstrelaVazia from './assets/estrela-vazia.png';
+import api from './services/api'
 
 
 export default function Item(props) {
     const [isFavorite, setFavorite] = useState(false);
 
     async function handleEditarPress() {
-        const item = await Database.getItem(props.id)
-        props.navigation.navigate("Form", item);
+        const response = await api.get('/api/bebidas/'+ props.id);
+        if(response.status == 200) {
+            props.navigation.navigate("Form", response.data)
+        }
     }
 
     async function handleFavoritePress() {
         if(!isFavorite) {
             setFavorite(true);
-            const favorite = await Database.saveFavorite(true, props.id)
+            // const favorite = await Database.saveFavorite(true, props.id)
         } else {
             setFavorite(false);
-            const favorite = await Database.saveFavorite(false, props.id)
+            // const favorite = await Database.saveFavorite(false, props.id)
         }
     }
 
@@ -33,10 +35,26 @@ export default function Item(props) {
                     onPress: () => console.log("Foi cancelado"),
                     style: "cancel"
                 },
-                { text: "Sim", onPress: () => {
-                    Database.deleteItem(props.id)
-                        .then(response => props.navigation.navigate("List", {id: props.id}))
-                }}
+                { text: "Sim", onPress: async () => {
+                    const response = await api.delete('/api/bebidas/'+ props.id);
+                    if(response.status == 200) {
+                        Alert.alert(
+                            "Atenção",
+                            "Dados excluido com sucesso",
+                            [
+                                {
+                                    text: "Okay",
+                                    onPress: () => console.log("Foi confirmado"),
+                                    style: "cancel"
+                                },
+                            ],
+                            { cancelable: false}
+                        )
+                        props.navigation.navigate("List", {id: props.id})
+                    }
+                }
+                
+            }
             ],
             { cancelable: false}
         )

@@ -2,7 +2,7 @@ import { StatusBar } from 'expo-status-bar';
 import React, {useState, useEffect} from 'react';
 import { StyleSheet, Text, View, TextInput, TouchableOpacity, Alert, CheckBox } from 'react-native';
 import DatePicker from 'react-native-modal-datetime-picker';
-import Database from './Database';
+import api from './services/api';
 
 export default function Form({route, navigation}) {
     const id = route.params ? route.params.id : undefined;
@@ -15,8 +15,9 @@ export default function Form({route, navigation}) {
     useEffect(() => {
         if(!route.params) return;
         setDescricao(route.params.descricao);
-        setDate(route.params.date.toString() !== null ? route.params.date.toString() : '')
+        setDate(route.params.dataEntrega.toString() !== null ? route.params.dataEntrega.toString() : '')
         setQuantidade(route.params.quantidade.toString() != null ? route.params.quantidade.toString() : '');
+        setSelection(route.params.isGelada !== null ? route.params.isGelada : null)
     }, [route])
 
     function handleDescricaoChange(descricao) {
@@ -45,8 +46,8 @@ export default function Form({route, navigation}) {
         hideDatePicker();
       };
     async function handleButtonPress() {
-        const item = {descricao, quantidade: parseInt(quantidade), date: date, isGelada: isSelected, favorite: false};
-        if(item.descricao == "") {
+        const item = {descricao, quantidade: parseInt(quantidade), dataEntrega: new Date(date), isGelada: isSelected};
+        if(item.descricao == "") { 
             Alert.alert(
                 "Atenção",
                 "Não é permitido a inclusão de cervejas sem descrição",
@@ -75,7 +76,22 @@ export default function Form({route, navigation}) {
             )
             return
         } else {
-            Database.saveItem(item, id).then(response => navigation.navigate("List", item))
+            const response = await api.post('/api/bebidas', item);
+            if(response.status == 200) {
+                Alert.alert(
+                    "Atenção",
+                    "Dados salvos com sucesso",
+                    [
+                        {
+                            text: "Okay",
+                            onPress: () => console.log("Foi confirmado"),
+                            style: "cancel"
+                        },
+                    ],
+                    { cancelable: false}
+                )
+                navigation.navigate("List", item);
+            }
         }
         
     }

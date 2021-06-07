@@ -4,13 +4,21 @@ import { StyleSheet, Text, View } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
 import Item from './Item';
 import api from './services/api'
+import Loading from './components/Loading'
+
+
 export default function List({route, navigation}) {
     const [items, setItems] = useState([]);
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         async function loadBebidas() {
             try {
-                const response = await api.get('/api/bebidas');
+                setLoading(true);
+                const response = await api.get('/api/bebidas').then(response => {
+                    setLoading(false);
+                    return response
+                });
                 setItems(response.data)
             } catch(e) {
                 console.log(e);
@@ -18,10 +26,12 @@ export default function List({route, navigation}) {
         }
         loadBebidas();
     }, [route]);
+
     return (
         <View style={styles.container}>
             <StatusBar style="light"/>
             <Text style={styles.title}>Lista de cervejas</Text>
+            <Loading loading={loading} message='Carregando bebidas...' />
             <ScrollView 
             style={styles.scrollContainer}
             contentContainerStyle={styles.itemsContainer}>

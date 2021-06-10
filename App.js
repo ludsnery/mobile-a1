@@ -7,7 +7,7 @@ export default function App() {
   return (
     <LoadingProvider>
       <Tab />
-      <StatusBar style='light'/>
+      <StatusBar style='dark'/>
     </LoadingProvider>
   );
 }

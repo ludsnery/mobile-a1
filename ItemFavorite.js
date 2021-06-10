@@ -17,7 +17,7 @@ export default function ItemFavorite(props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#ccc',
         width: '100%'
     },
     favoriteContainer: {

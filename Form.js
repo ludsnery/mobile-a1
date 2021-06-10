@@ -5,7 +5,7 @@ import DatePicker from 'react-native-modal-datetime-picker';
 import api from './services/api';
 
 export default function Form({route, navigation}) {
-    const id = route.params ? route.params.id : undefined;
+    const id = route.params ? route.params._id : undefined;
     const [descricao, setDescricao] = useState('');
     const [quantidade, setQuantidade] = useState('');
     const [isSelected, setSelection] = useState(false);
@@ -76,22 +76,47 @@ export default function Form({route, navigation}) {
             )
             return
         } else {
-            const response = await api.post('/api/bebidas', item);
-            if(response.status == 200) {
-                Alert.alert(
-                    "Atenção",
-                    "Dados salvos com sucesso",
-                    [
-                        {
-                            text: "Okay",
-                            onPress: () => console.log("Foi confirmado"),
-                            style: "cancel"
-                        },
-                    ],
-                    { cancelable: false}
-                )
-                navigation.navigate("List", item);
+            if(id != undefined) {
+                const response = await api.put(`/api/bebidas/${id}`, item);
+                if(response.status == 200) {
+                    Alert.alert(
+                        "Atenção",
+                        "Dados salvos com sucesso",
+                        [
+                            {
+                                text: "Okay",
+                                onPress: () => console.log("Foi confirmado"),
+                                style: "cancel"
+                            },
+                        ],
+                        { cancelable: false}
+                    )
+                    setDate('');
+                    setDescricao('');
+                    setQuantidade('');
+                    setSelection(false);
+                    setDatePickerVisibility(false);
+                    navigation.navigate("List", item);
+                }   
+            } else {
+                const response = await api.post('/api/bebidas', item);
+                if(response.status == 200) {
+                    Alert.alert(
+                        "Atenção",
+                        "Dados salvos com sucesso",
+                        [
+                            {
+                                text: "Okay",
+                                onPress: () => console.log("Foi confirmado"),
+                                style: "cancel"
+                            },
+                        ],
+                        { cancelable: false}
+                    )
+                    navigation.navigate("List", item);
+                }
             }
+
         }
         
     }
@@ -154,7 +179,7 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 20,
         borderTopRightRadius: 10,
         alignItems: 'stretch',
-        backgroundColor: '#fff'
+        backgroundColor: '#ccc'
     },
     input: {
         marginTop: 10,

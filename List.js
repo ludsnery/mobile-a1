@@ -34,7 +34,7 @@ export default function List({route, navigation}) {
             style={styles.scrollContainer}
             contentContainerStyle={styles.itemsContainer}>
                 {items.map(item => {
-                    return <Item key={item._id} id={item._id} item={item.quantidade + ' unidades da ' + item.descricao + ' / Data entrega ' + new Date(item.dataEntrega).toLocaleDateString('pt-BR') + '/ Gelada: ' + (item.isGelada == true ? 'Sim' : 'Não') } navigation={navigation} />
+                    return <Item key={item._id} id={item._id} data={item} item={item.quantidade + ' unidades da ' + item.descricao + ' / Data entrega ' + new Date(item.dataEntrega).toLocaleDateString('pt-BR') + '/ Gelada: ' + (item.isGelada == true ? 'Sim' : 'Não') } navigation={navigation} />
                 })}
             </ScrollView>
         </View>
@@ -66,6 +66,6 @@ const styles = StyleSheet.create({
         borderTopLeftRadius: 10,
         borderTopRightRadius: 10,
         alignItems: 'stretch',
-        backgroundColor: '#fff'
+        backgroundColor: '#ccc'
     }
 })

@@ -3,25 +3,66 @@ import { StyleSheet, Text, View, TouchableOpacity, Alert, Image } from 'react-na
 import Estrela from './assets/estrela.png';
 import EstrelaVazia from './assets/estrela-vazia.png';
 import api from './services/api'
+import { useLoading } from './contexts/Loading'
 
 
 export default function Item(props) {
     const [isFavorite, setFavorite] = useState(false);
+    const {startLoading, endLoading } = useLoading() 
 
     async function handleEditarPress() {
+        startLoading('Atualizando bebidas...')
         const response = await api.get('/api/bebidas/'+ props.id);
         if(response.status == 200) {
+            endLoading();
             props.navigation.navigate("Form", response.data)
         }
     }
 
     async function handleFavoritePress() {
         if(!isFavorite) {
-            setFavorite(true);
-            // const favorite = await Database.saveFavorite(true, props.id)
+            const item = { bebida: props.id }
+            startLoading('Atualizando favoritos...')
+
+            const response = await api.post('/api/favorites', item);
+            if(response.status == 200) {
+                setFavorite(true);
+                endLoading();
+                Alert.alert(
+                    "Atenção",
+                    "Dados salvos com sucesso",
+                    [
+                        {
+                            text: "Okay",
+                            onPress: () => console.log("Foi confirmado"),
+                            style: "cancel"
+                        },
+                    ],
+                    { cancelable: false}
+                )
+                props.navigation.navigate("ListFavorite", item)
+
+            }
         } else {
-            setFavorite(false);
-            // const favorite = await Database.saveFavorite(false, props.id)
+            startLoading('Removendo dos favoritos...')
+            const response = await api.delete('/api/favorites/' + props.id );
+            if(response.status == 200) {
+                setFavorite(false);
+                endLoading();
+                Alert.alert(
+                    "Atenção",
+                    "Dados salvos com sucesso",
+                    [
+                        {
+                            text: "Okay",
+                            onPress: () => console.log("Foi confirmado"),
+                            style: "cancel"
+                        },
+                    ],
+                    { cancelable: false}
+                )
+                props.navigation.navigate("ListFavorite", {id: props.id})
+            }
         }
     }
 
@@ -59,7 +100,6 @@ export default function Item(props) {
             { cancelable: false}
         )
     }
-    
     return (
         <View style={styles.container}>
             <View style={styles.favoriteContainer}>
@@ -83,7 +123,7 @@ export default function Item(props) {
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#fff',
+        backgroundColor: '#ccc',
         width: '100%'
     },
     buttonsContainer: {
